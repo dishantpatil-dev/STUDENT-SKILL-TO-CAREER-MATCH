@@ -30,23 +30,23 @@
         <nav>
 
             <button class="nav-btn active" onclick="showPage('assessment')">
-                🏠 Dashboard
+                🏠 Assessment
             </button>
 
             <button class="nav-btn" onclick="showPage('assessment')">
-                ▣ Assessment
+                ▣ Profile Inputs
             </button>
 
             <button class="nav-btn" onclick="showPage('recommendations')">
-                ♧ Recommendations
+                ♧ Career Matches
             </button>
 
             <button class="nav-btn" onclick="showPage('skillgap')">
-                📈 Skill Gap
+                📈 Skill Gaps
             </button>
 
             <button class="nav-btn" onclick="showPage('roadmap')">
-                🗺 Roadmap
+                🗺 Learning Roadmap
             </button>
 
             <button class="nav-btn" onclick="showPage('profile')">
@@ -330,138 +330,13 @@
             </div>
 
 
-            <h3 class="section-title">
-                Top Career Matches
-            </h3>
+            <h3 class="section-title">Top Career Matches</h3>
 
+            <div id="analysisSummary" class="analysis-summary"></div>
 
-            <!-- CAREER 1 -->
+            <div id="careerResults"></div>
 
-            <div class="career-card best">
-
-                <div class="career-icon green">
-                    &lt;/&gt;
-                </div>
-
-                <div class="career-info">
-
-                    <h3>
-                        1. Software Developer
-
-                        <span class="best-badge">
-                            Best Match
-                        </span>
-                    </h3>
-
-                    <p>
-                        Builds applications, solves problems and creates software solutions.
-                    </p>
-
-                </div>
-
-                <div class="score">
-
-                    <small>
-                        Compatibility Score
-                    </small>
-
-                    <strong>
-                        87%
-                    </strong>
-
-                    <div class="progress">
-                        <div style="width:87%"></div>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- CAREER 2 -->
-
-            <div class="career-card">
-
-                <div class="career-icon blue">
-                    ▥
-                </div>
-
-                <div class="career-info">
-
-                    <h3>
-                        2. Data Analyst
-                    </h3>
-
-                    <p>
-                        Analyzes data and helps organizations make better decisions.
-                    </p>
-
-                </div>
-
-                <div class="score">
-
-                    <small>
-                        Compatibility Score
-                    </small>
-
-                    <strong>
-                        72%
-                    </strong>
-
-                    <div class="progress">
-                        <div style="width:72%"></div>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- CAREER 3 -->
-
-            <div class="career-card">
-
-                <div class="career-icon purple">
-                    🧠
-                </div>
-
-                <div class="career-info">
-
-                    <h3>
-                        3. Data Scientist
-                    </h3>
-
-                    <p>
-                        Uses data, machine learning and statistics to solve complex problems.
-                    </p>
-
-                </div>
-
-                <div class="score">
-
-                    <small>
-                        Compatibility Score
-                    </small>
-
-                    <strong>
-                        65%
-                    </strong>
-
-                    <div class="progress">
-                        <div style="width:65%"></div>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="info">
-
-                ⓘ Scores are calculated based on your skills match with required career skills.
-
-            </div>
-
+            <div id="recommendationNote" class="info"></div>
         </section>
 
 
@@ -613,129 +488,7 @@
             </div>
 
 
-            <div class="roadmap">
-
-                <!-- STEP 1 -->
-
-                <div class="step">
-
-                    <div class="step-icon green">
-                        &lt;/&gt;
-                    </div>
-
-                    <h4>Step 1</h4>
-
-                    <strong>
-                        Strengthen Basics
-                    </strong>
-
-                    <ul>
-                        <li>C++ Basics</li>
-                        <li>Data Types</li>
-                        <li>Control Structures</li>
-                        <li>Basic Problems</li>
-                    </ul>
-
-                </div>
-
-
-                <!-- STEP 2 -->
-
-                <div class="step">
-
-                    <div class="step-icon blue">
-                        ◆
-                    </div>
-
-                    <h4>Step 2</h4>
-
-                    <strong>
-                        Learn OOP
-                    </strong>
-
-                    <ul>
-                        <li>Classes & Objects</li>
-                        <li>Inheritance</li>
-                        <li>Polymorphism</li>
-                        <li>Encapsulation</li>
-                    </ul>
-
-                </div>
-
-
-                <!-- STEP 3 -->
-
-                <div class="step">
-
-                    <div class="step-icon orange">
-                        &lt;/&gt;
-                    </div>
-
-                    <h4>Step 3</h4>
-
-                    <strong>
-                        Master DSA
-                    </strong>
-
-                    <ul>
-                        <li>Arrays & Strings</li>
-                        <li>Linked Lists</li>
-                        <li>Stacks & Queues</li>
-                        <li>Trees & Graphs</li>
-                    </ul>
-
-                </div>
-
-
-                <!-- STEP 4 -->
-
-                <div class="step">
-
-                    <div class="step-icon purple">
-                        ●
-                    </div>
-
-                    <h4>Step 4</h4>
-
-                    <strong>
-                        Build Projects
-                    </strong>
-
-                    <ul>
-                        <li>Mini Projects</li>
-                        <li>Problem Solving</li>
-                        <li>Git & GitHub</li>
-                        <li>Code Quality</li>
-                    </ul>
-
-                </div>
-
-
-                <!-- STEP 5 -->
-
-                <div class="step">
-
-                    <div class="step-icon pink">
-                        💼
-                    </div>
-
-                    <h4>Step 5</h4>
-
-                    <strong>
-                        Internship & Placement
-                    </strong>
-
-                    <ul>
-                        <li>Advanced Topics</li>
-                        <li>System Design</li>
-                        <li>Resume Building</li>
-                        <li>Apply & Practice</li>
-                    </ul>
-
-                </div>
-
-            </div>
-
+            <div id="roadmapSteps" class="roadmap"></div>
 
             <div class="goal">
 
