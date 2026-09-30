@@ -785,3 +785,63 @@ select:focus {
     }
 
 }
+
+/* ============================================================
+   EXPLAINABLE MATCHER UI
+   ============================================================ */
+
+.analysis-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 0 0 14px;
+}
+
+.summary-card {
+    background: white;
+    border: 1px solid #dce2e8;
+    border-radius: 8px;
+    padding: 14px;
+}
+
+.summary-card small {
+    display: block;
+    color: #687389;
+    font-size: 9px;
+    margin-bottom: 5px;
+}
+
+.summary-card strong {
+    display: block;
+    font-size: 21px;
+    margin-bottom: 4px;
+}
+
+.summary-card span {
+    color: #687389;
+    font-size: 9px;
+}
+
+.match-evidence {
+    margin-top: 7px;
+    color: #687389;
+    font-size: 9px;
+}
+
+.priority-gap {
+    background: #fffaf5;
+}
+
+#recommendationNote {
+    line-height: 1.6;
+}
+
+#roadmapSteps .step-icon {
+    background: white;
+}
+
+@media(max-width:800px) {
+    .analysis-summary {
+        grid-template-columns: 1fr;
+    }
+}
