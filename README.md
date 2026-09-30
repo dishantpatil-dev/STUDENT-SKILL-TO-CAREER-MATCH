@@ -1,33 +1,59 @@
-Student Skill Career Matcher is a lightweight front-end web project designed to analyze a student's input skills and recommend suitable career pathways based on that profile.
+# Student Skill-to-Career Matcher
 
-How It's Made
+An explainable, browser-based career exploration tool that maps a student's skills, interests, strengths, subjects and preferences to career profiles.
 
-HTML5 (index.html): Structures the user interface, providing text inputs or checkboxes for entering skills alongside visual containers for career suggestions.
+## What changed
 
-CSS3 (style.css): Handles visual styling, layout formatting, and responsive UI elements for a clean presentation.
+The matcher uses a transparent rule-based scoring model instead of treating every skill as equally important.
 
-JavaScript (script.js): Powers the core logic, taking user input, comparing skills against predetermined career criteria, and displaying the best matching results dynamically.
+### Matching model
 
-Working & Uses
+- **70% technical skill coverage** — weighted skills such as DSA, SQL, machine learning or cloud can contribute different amounts.
+- **12% interests** — compares stated interests with the career profile.
+- **8% strengths / subjects** — uses supporting signals such as problem solving, mathematics and analytical thinking.
+- **10% career preferences** — checks whether the student's stated preferences align with the career profile.
+- Skill aliases normalize inputs such as `JS -> JavaScript`, `C++ / CPP -> C++`, `MySQL / PostgreSQL -> SQL`, and `ML -> Machine Learning`.
+- Results show matched-skill evidence and prioritized gaps.
+- The roadmap changes automatically for the strongest matching career.
+- Student input is saved locally in the browser.
 
-Working: The user selects or types in their current skills. When submitted, the JavaScript script evaluates the input against a dataset of roles and returns recommended jobs with key skill requirements.
+> **Important:** the score is an explainable heuristic for career exploration. It is **not** a probability of getting hired and should not be used as a hiring prediction.
 
-Primary Uses:
+## Current career profiles
 
-Career Guidance: Helps students identify career options aligned with their current skillset.
+Software Developer, Backend Developer, Web Developer, Data Analyst, Data Scientist, AI / ML Engineer, and Cloud / DevOps Engineer.
 
-Skill Gap Identification: Highlights additional skills needed to qualify for desired job titles.
+The career profiles are intentionally editable JavaScript data so the project can later move to a database/API without rewriting the UI.
 
-Educational Demo: Serves as a practical portfolio project for web development fundamentals.
+## Tech stack
 
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/b344c0ac-071a-45cc-bcb1-4fa82d6f7e78" />
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/852367a0-5d07-4bb0-bb1d-84338af39e15" />
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/c61548cd-f36e-4533-85ee-b45869832fb3" />
+- HTML5
+- CSS3
+- Vanilla JavaScript
+- LocalStorage
+- Rule-based weighted matching
 
-Key Advantages
+## Project structure
 
-Client-Side Processing: Runs entirely in the browser without requiring a backend server or database setup.
+    STUDENT-SKILL-TO-CAREER-MATCH/
+    └── Student-Skill-Career-Matcher/
+        ├── index.html
+        ├── script.js
+        └── style.css
 
-Fast & Lightweight: Zero external heavy framework dependencies, ensuring fast load times and instant feedback.
+## Next engineering upgrades
 
-Extensible: Simple base codebase that easily allows adding new skills, job roles, or complex scoring algorithms.
+1. Move career profiles into JSON or a backend database.
+2. Add tests for normalization and scoring.
+3. Add a versioned skill taxonomy.
+4. Add authenticated student profiles.
+5. Add an API layer for recommendations.
+6. Add outcome data later and evaluate the scoring model against real user feedback.
+
+## Evidence and limitations
+
+The career profiles are a structured starting point, not a complete labor-market model. Career requirements vary by employer, geography, seniority and specialization. Public occupational resources such as O*NET can be used to periodically review and update the skill taxonomy.
+
+## Run locally
+
+Open `Student-Skill-Career-Matcher/index.html` in a modern browser.
