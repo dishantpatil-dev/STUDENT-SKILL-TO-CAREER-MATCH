@@ -99,3 +99,60 @@ If you find the project useful, consider giving it a **star**.
 </p>
 
 <p align="center"><strong>Built to turn skills into clearer career direction.</strong></p>
+
+## 🚀 Product Capabilities
+
+The current web app now goes beyond a static career list:
+
+### 🎯 Career matching
+Enter your skills, interests and profile information to calculate compatibility with the tracked career profiles.
+
+### 📈 Skill-gap analysis
+The app identifies tracked requirements that are not yet present in your current skill profile.
+
+### 🗺️ Personalized roadmap
+The roadmap updates around the selected career and current skill gaps, giving a practical sequence from fundamentals to projects and interview preparation.
+
+### 🧾 Job-description matching
+Paste a job description into **Job Match** to detect supported technical skills and compare them against your current profile.
+
+The Job Match score is intentionally described as **tracked skill coverage**, not an ATS score, hiring probability or prediction.
+
+```text
+Your Skills
+    │
+    ├──► Career Matching ──► Career Profiles
+    │
+    ├──► Skill Gap ────────► Missing Requirements
+    │
+    ├──► Roadmap ──────────► Prioritized Next Steps
+    │
+    └──► Job Description ──► Matched Skills + Gaps
+```
+
+## 🧠 Design Principles
+
+- **Explainable:** matching is based on visible skills and rules rather than an opaque recommendation.
+- **Local-first:** the current app works in the browser without requiring a backend.
+- **Extensible:** career profiles and skill aliases can be expanded without changing the overall UI.
+- **Honest metrics:** job matching reports tracked skill coverage rather than claiming to predict ATS results or hiring outcomes.
+
+## 🛣️ Open-Source Roadmap
+
+- [x] Career compatibility matching
+- [x] Skill-gap analysis
+- [x] Personalized roadmap
+- [x] Job-description skill matching
+- [x] Skill aliases / normalization
+- [ ] Weighted skill scoring
+- [ ] Larger normalized skill taxonomy
+- [ ] Exportable career report
+- [ ] Job-description history
+- [ ] Optional backend persistence
+- [ ] Optional AI-assisted explanations
+
+## 🤝 Contributing
+
+Feature ideas and implementation tasks are tracked in GitHub Issues. Good starting points include skill normalization, UI improvements, documentation and test coverage.
+
+Please keep matching logic explainable and avoid presenting the tool as a guarantee of employment, ATS ranking or career outcomes.
