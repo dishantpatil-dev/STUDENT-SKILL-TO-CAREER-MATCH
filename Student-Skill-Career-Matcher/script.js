@@ -812,3 +812,52 @@ function analyzeJobDescription() {
   out.innerHTML='<div class="job-result"><h3>Job Match Analysis</h3><p>This keyword-based comparison uses the skills tracked by this project. It is not an ATS prediction or hiring decision.</p><div class="match-stat-grid"><div class="match-stat"><strong>'+score+'%</strong><small>Tracked skill coverage</small></div><div class="match-stat"><strong>'+matched.length+'</strong><small>Skills you match</small></div><div class="match-stat"><strong>'+missing.length+'</strong><small>Skills to work on</small></div></div><p><strong>Closest tracked career profile:</strong> '+role+'</p><h4>Matched skills</h4><div class="keyword-list">'+(matched.length?matched.map(function(s){return '<span class="keyword matched">✓ '+s+"</span>";}).join(""):'<span class="keyword">No tracked skills detected</span>')+"</div><h4>Skill gaps</h4><div class="keyword-list">"+(missing.length?missing.map(function(s){return '<span class="keyword missing">+ '+s+"</span>";}).join(""):'<span class="keyword matched">No tracked gaps detected</span>')+"</div></div>";
 }
 updateRoadmap=function(career){renderPersonalizedRoadmap(career,findSkillGap(getStudentSkills(),career));};
+
+    
+// ==========================================
+// JOB WORKFLOW HELPERS
+// ==========================================
+
+function loadDemoJob() {
+    const input = document.getElementById("jobDescription");
+    if (!input) return;
+
+    input.value = `Software Engineer Intern
+
+We are looking for a software engineering intern who enjoys problem solving and building reliable software.
+
+Requirements:
+- Strong C++ or Python programming
+- Data structures and algorithms
+- Object-oriented programming
+- Git and GitHub
+- SQL
+- REST APIs
+- Basic system design
+- Testing
+- Docker
+`;
+
+    analyzeJobDescription();
+}
+
+function clearJobMatch() {
+    const input = document.getElementById("jobDescription");
+    const output = document.getElementById("jobMatchResults");
+    if (input) input.value = "";
+    if (output) output.innerHTML = "";
+}
+
+function buildJobLearningPlan(missing) {
+    const ordered = [
+        "C++", "Python", "OOP", "DSA", "Problem Solving",
+        "Git", "SQL", "REST API", "Testing", "Docker",
+        "System Design", "AWS", "Azure", "GCP"
+    ];
+
+    return ordered.filter(function(skill) {
+        return missing.some(function(item) {
+            return item.toLowerCase() === skill.toLowerCase();
+        });
+    }).slice(0, 6);
+}
