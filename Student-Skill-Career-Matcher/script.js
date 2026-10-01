@@ -767,3 +767,48 @@ window.onload = function() {
     }
 
 };
+
+// ENHANCED JOB DESCRIPTION MATCHING
+const skillAliases = {
+  "c++":["cpp","c plus plus"], "dsa":["dsa","data structures","algorithms"],
+  "problem solving":["problem-solving","problem solving"], "oop":["object oriented programming","object-oriented programming"],
+  "git":["git","github"], "sql":["sql","mysql","postgresql","postgres"], "system design":["system design","distributed systems"],
+  "python":["python"], "javascript":["javascript","js"], "machine learning":["machine learning","ml"],
+  "deep learning":["deep learning","neural networks"], "statistics":["statistics","statistical"],
+  "pandas & numpy":["pandas","numpy"], "data visualization":["data visualization","tableau","power bi"],
+  "power bi":["power bi"], "excel":["excel","microsoft excel"], "java":["java"], "typescript":["typescript"],
+  "react":["react","react.js"], "node.js":["node.js","nodejs","node"], "rest api":["rest api","restful","api"],
+  "docker":["docker","containerization"], "aws":["aws","amazon web services"], "azure":["azure","microsoft azure"],
+  "gcp":["gcp","google cloud"], "linux":["linux","unix"], "testing":["testing","unit testing","test automation"],
+  "html":["html","html5"], "css":["css","css3"]
+};
+const jobSkillCatalog = ["c++","java","python","javascript","typescript","react","node.js","dsa","problem solving","oop","git","sql","system design","machine learning","deep learning","statistics","pandas & numpy","data visualization","power bi","excel","rest api","docker","aws","azure","gcp","linux","testing","html","css"];
+function skillMentioned(text, skill) {
+  const aliases=skillAliases[skill]||[skill]; const t=text.toLowerCase();
+  return aliases.some(function(a){return t.includes(a.toLowerCase());});
+}
+function currentSkillMatches(skill) {
+  const aliases=skillAliases[skill]||[skill]; const s=getStudentSkills();
+  return s.some(function(x){return aliases.some(function(a){return x.includes(a)||a.includes(x);});});
+}
+function renderPersonalizedRoadmap(career, missing) {
+  const box=document.querySelector("#roadmap .roadmap"); const title=document.querySelector("#roadmap .page-header p");
+  if(!box)return;
+  if(title)title.innerHTML="Personalized path toward <b>"+career.name+"</b> based on your current skill profile.";
+  const steps=[["Foundation",["Strengthen core programming","Practice debugging and problem solving"]],["Core Skills",missing.slice(0,3)],["Role Skills",missing.slice(3,6)],["Projects",["Build one project using the target stack","Document the project and tests"]],["Interview / Application",["Practice role-specific questions","Review resume and project explanations"]]];
+  const colors=["green","blue","orange","purple","pink"];
+  box.innerHTML=steps.map(function(x,i){var items=x[1].length?x[1]:["Deepen skills required for "+career.name];return '<div class="step"><div class="step-icon '+colors[i]+'">'+(i+1)+'</div><h4>Step '+(i+1)+'</h4><strong>'+x[0]+'</strong><ul>'+items.map(function(v){return "<li>"+v+"</li>";}).join("")+"</ul></div>";}).join("");
+  const goal=document.querySelector("#roadmap .goal p"); if(goal)goal.textContent=missing.length?"Focus next on "+missing.slice(0,4).join(", ")+". Re-run the assessment as your skills grow.":"Your current profile covers the tracked requirements. Keep building projects and validating your skills with practice.";
+}
+function analyzeJobDescription() {
+  const input=document.getElementById("jobDescription"), out=document.getElementById("jobMatchResults"); if(!input||!out)return;
+  const text=input.value.trim(); if(!text){out.innerHTML='<div class="info">Paste a job description first.</div>';return;}
+  const mentioned=jobSkillCatalog.filter(function(s){return skillMentioned(text,s);});
+  const matched=mentioned.filter(currentSkillMatches);
+  const missing=mentioned.filter(function(s){return !currentSkillMatches(s);});
+  const score=mentioned.length?Math.round(matched.length/mentioned.length*100):0;
+  const fit=careers.map(function(c){return {career:c,count:c.skills.filter(function(s){return skillMentioned(text,s);}).length};}).sort(function(a,b){return b.count-a.count;})[0];
+  const role=fit&&fit.count?fit.career.name:"No tracked career profile matched strongly";
+  out.innerHTML='<div class="job-result"><h3>Job Match Analysis</h3><p>This keyword-based comparison uses the skills tracked by this project. It is not an ATS prediction or hiring decision.</p><div class="match-stat-grid"><div class="match-stat"><strong>'+score+'%</strong><small>Tracked skill coverage</small></div><div class="match-stat"><strong>'+matched.length+'</strong><small>Skills you match</small></div><div class="match-stat"><strong>'+missing.length+'</strong><small>Skills to work on</small></div></div><p><strong>Closest tracked career profile:</strong> '+role+'</p><h4>Matched skills</h4><div class="keyword-list">'+(matched.length?matched.map(function(s){return '<span class="keyword matched">✓ '+s+"</span>";}).join(""):'<span class="keyword">No tracked skills detected</span>')+"</div><h4>Skill gaps</h4><div class="keyword-list">"+(missing.length?missing.map(function(s){return '<span class="keyword missing">+ '+s+"</span>";}).join(""):'<span class="keyword matched">No tracked gaps detected</span>')+"</div></div>";
+}
+updateRoadmap=function(career){renderPersonalizedRoadmap(career,findSkillGap(getStudentSkills(),career));};
