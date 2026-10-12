@@ -851,16 +851,26 @@ function renderPersonalizedRoadmap(career, missing) {
   box.innerHTML=steps.map(function(x,i){var items=x[1].length?x[1]:["Deepen skills required for "+career.name];return '<div class="step"><div class="step-icon '+colors[i]+'">'+(i+1)+'</div><h4>Step '+(i+1)+'</h4><strong>'+x[0]+'</strong><ul>'+items.map(function(v){return "<li>"+v+"</li>";}).join("")+"</ul></div>";}).join("");
   const goal=document.querySelector("#roadmap .goal p"); if(goal)goal.textContent=missing.length?"Focus next on "+missing.slice(0,4).join(", ")+". Re-run the assessment as your skills grow.":"Your current profile covers the tracked requirements. Keep building projects and validating your skills with practice.";
 }
+function escapeJobHtml(value) {
+ return String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
 function analyzeJobDescription() {
-  const input=document.getElementById("jobDescription"), out=document.getElementById("jobMatchResults"); if(!input||!out)return;
-  const text=input.value.trim(); if(!text){out.innerHTML='<div class="info">Paste a job description first.</div>';return;}
-  const mentioned=jobSkillCatalog.filter(function(s){return skillMentioned(text,s);});
-  const matched=mentioned.filter(currentSkillMatches);
-  const missing=mentioned.filter(function(s){return !currentSkillMatches(s);});
-  const score=mentioned.length?Math.round(matched.length/mentioned.length*100):0;
-  const fit=careers.map(function(c){return {career:c,count:c.skills.filter(function(s){return skillMentioned(text,s);}).length};}).sort(function(a,b){return b.count-a.count;})[0];
-  const role=fit&&fit.count?fit.career.name:"No tracked career profile matched strongly";
-  out.innerHTML='<div class="job-result"><h3>Job Match Analysis</h3><p>This keyword-based comparison uses the skills tracked by this project. It is not an ATS prediction or hiring decision.</p><div class="match-stat-grid"><div class="match-stat"><strong>'+score+'%</strong><small>Tracked skill coverage</small></div><div class="match-stat"><strong>'+matched.length+'</strong><small>Skills you match</small></div><div class="match-stat"><strong>'+missing.length+'</strong><small>Skills to work on</small></div></div><p><strong>Closest tracked career profile:</strong> '+role+'</p><h4>Matched skills</h4><div class="keyword-list">'+(matched.length?matched.map(function(s){return '<span class="keyword matched">✓ '+s+"</span>";}).join(""):'<span class="keyword">No tracked skills detected</span>')+"</div><h4>Skill gaps</h4><div class="keyword-list">"+(missing.length?missing.map(function(s){return '<span class="keyword missing">+ '+s+"</span>";}).join(""):'<span class="keyword matched">No tracked gaps detected</span>')+"</div></div>";
+ const input=document.getElementById("jobDescription");
+ const out=document.getElementById("jobMatchResults");
+ if(!input||!out)return;
+ const description=input.value.trim();
+ if(!description){out.innerHTML='<div class="info">Paste a job description first.</div>';return;}
+ const mentioned=jobSkillCatalog.filter(function(skill){return skillMentioned(description,skill);});
+ const matched=mentioned.filter(currentSkillMatches);
+ const missing=mentioned.filter(function(skill){return !currentSkillMatches(skill);});
+ const score=mentioned.length?Math.round(matched.length/mentioned.length*100):0;
+ const ranking=careers.map(function(career){
+   return {career:career,count:(career.skills||[]).filter(function(skill){return skillMentioned(description,skill);}).length};
+ }).sort(function(a,b){return b.count-a.count;});
+ const role=ranking[0]&&ranking[0].count?ranking[0].career.name:"No tracked career profile matched strongly";
+ const matchedHtml=matched.length?matched.map(function(skill){return '<span class="keyword matched">✓ '+escapeJobHtml(skill)+'</span>';}).join(""):'<span class="keyword">No tracked skills detected</span>';
+ const missingHtml=missing.length?missing.map(function(skill){return '<span class="keyword missing">+ '+escapeJobHtml(skill)+'</span>';}).join(""):'<span class="keyword matched">No tracked gaps detected</span>';
+ out.innerHTML='<div class="job-result"><h3>Job Match Analysis</h3><p>This keyword-based comparison uses the skills tracked by this project. It is not an ATS prediction or hiring decision.</p><div class="match-stat-grid"><div class="match-stat"><strong>'+score+'%</strong><small>Tracked skill coverage</small></div><div class="match-stat"><strong>'+matched.length+'</strong><small>Skills you match</small></div><div class="match-stat"><strong>'+missing.length+'</strong><small>Skills to work on</small></div></div><p><strong>Closest tracked career profile:</strong> '+escapeJobHtml(role)+'</p><h4>Matched skills</h4><div class="keyword-list">'+matchedHtml+'</div><h4>Skill gaps</h4><div class="keyword-list">'+missingHtml+'</div></div>';
 }
 updateRoadmap=function(career){renderPersonalizedRoadmap(career,findSkillGap(getStudentSkills(),career));};
 
