@@ -831,16 +831,35 @@ const skillAliases = {
   "react":["react","react.js"], "node.js":["node.js","nodejs","node"], "rest api":["rest api","restful","api"],
   "docker":["docker","containerization"], "aws":["aws","amazon web services"], "azure":["azure","microsoft azure"],
   "gcp":["gcp","google cloud"], "linux":["linux","unix"], "testing":["testing","unit testing","test automation"],
-  "html":["html","html5"], "css":["css","css3"]
+  "html":["html","html5"], "css":["css","css3"],
+  "sql":["sql","structured query language"], "postgresql":["postgresql","postgres","psql"], "mysql":["mysql"],
+  "javascript":["javascript","js","ecmascript"], "typescript":["typescript","ts"],
+  "c++":["c++","cpp","c plus plus"], "c#":["c#","c sharp","csharp"],
+  "rest api":["rest api","restful api","restful services"], "node.js":["node.js","nodejs"],
+  "machine learning":["machine learning","ml"], "artificial intelligence":["artificial intelligence","ai"],
+  "mathematics":["mathematics","math","maths"], "algebra":["algebra"], "geometry":["geometry"],
+  "biology":["biology","bio"], "chemistry":["chemistry","chem"], "physics":["physics"],
+  "drawing":["drawing","sketching","freehand drawing"], "engineering drawing":["engineering drawing","technical drawing"],
+  "biochemistry":["biochemistry","biochemical science"], "biotechnology":["biotechnology","biotech"],
+  "pharmacy":["pharmacy","pharmaceutical science"], "communication":["communication","communication skills"],
+  "git":["git","git version control"], "github":["github","git hub"]
 };
-const jobSkillCatalog = ["c++","java","python","javascript","typescript","react","node.js","dsa","problem solving","oop","git","sql","system design","machine learning","deep learning","statistics","pandas & numpy","data visualization","power bi","excel","rest api","docker","aws","azure","gcp","linux","testing","html","css"];
+const jobSkillCatalog = ["c++","java","python","javascript","typescript","react","node.js","dsa","problem solving","oop","git","github","sql","postgresql","mysql","system design","machine learning","deep learning","artificial intelligence","statistics","pandas & numpy","data visualization","power bi","excel","rest api","docker","aws","azure","gcp","linux","testing","html","css","mathematics","algebra","geometry","calculus","drawing","engineering drawing","biology","chemistry","physics","biochemistry","biotechnology","pharmacy","communication"];
 function skillMentioned(text, skill) {
-  const aliases=skillAliases[skill]||[skill]; const t=text.toLowerCase();
-  return aliases.some(function(a){return t.includes(a.toLowerCase());});
+  const aliases=skillAliases[skill]||[skill];
+  const normalizedText=" "+String(text||"").toLowerCase().replace(/[^a-z0-9+#.]+/g," ").trim()+" ";
+  return aliases.some(function(alias){
+    const phrase=String(alias||"").toLowerCase().replace(/[^a-z0-9+#.]+/g," ").trim();
+    return phrase.length>0 && normalizedText.includes(" "+phrase+" ");
+  });
 }
 function currentSkillMatches(skill) {
-  const aliases=skillAliases[skill]||[skill]; const s=getStudentSkills();
-  return s.some(function(x){return aliases.some(function(a){return x.includes(a)||a.includes(x);});});
+  const target=normalizeSkill(skill);
+  const aliases=(skillAliases[skill]||[skill]).map(normalizeSkill);
+  return getStudentSkills().some(function(value){
+    const current=normalizeSkill(value);
+    return current===target || aliases.some(function(alias){return current===alias;});
+  });
 }
 function renderPersonalizedRoadmap(career, missing) {
   const box=document.querySelector("#roadmap .roadmap"); const title=document.querySelector("#roadmap .page-header p");
@@ -1028,24 +1047,62 @@ function profileHas(skill,studentSkills){
   });
  });
 }
+const CAREER_SCORE_WEIGHTS = Object.freeze({ core: 0.70, preferred: 0.25, bonus: 0.05 });
 function calculateCareerScore(studentSkills,career){
- const req=career.skills||[];if(!req.length)return 0;
- let hit=0;req.forEach(function(s){if(profileHas(s,studentSkills))hit++;});
- const base=hit/req.length*75;
+ const core=career.coreSkills || career.requiredSkills || [];
+ const all=career.skills || [];
+ const preferred=(career.preferredSkills || all).filter(function(s){return !core.some(function(c){return normalizeSkill(c)===normalizeSkill(s);});});
+ const bonus=career.bonusSkills || [];
+ const groups=[{skills:core,weight:CAREER_SCORE_WEIGHTS.core},{skills:preferred,weight:CAREER_SCORE_WEIGHTS.preferred},{skills:bonus,weight:CAREER_SCORE_WEIGHTS.bonus}].filter(function(group){return group.skills.length>0;});
+ if(!groups.length)return 0;
+ let availableWeight=0,earned=0;
+ groups.forEach(function(group){
+  const unique=Array.from(new Set(group.skills.map(normalizeSkill))).filter(Boolean);
+  if(!unique.length)return;
+  const hits=unique.filter(function(skill){return profileHas(skill,studentSkills);}).length;
+  availableWeight+=group.weight;earned+=(hits/unique.length)*group.weight;
+ });
  const subjectHits=(career.subjects||[]).filter(function(s){return profileHas(s,studentSkills);}).length;
  const interestText=normalizeSkill((document.getElementById("interests")||{}).value||"");
  const interestHits=(career.interests||[]).filter(function(s){return interestText.includes(normalizeSkill(s));}).length;
- return Math.min(100,Math.round(base+Math.min(15,subjectHits*5)+Math.min(10,interestHits*5)));
+ const weightedScore=availableWeight?earned/availableWeight*85:0;
+ const contextBonus=Math.min(10,subjectHits*2)+Math.min(5,interestHits*2.5);
+ return Math.max(0,Math.min(100,Math.round(weightedScore+contextBonus)));
 }
 function findSkillGap(studentSkills,career){return (career.requiredSkills||[]).filter(function(s){return !profileHas(s,studentSkills);});}
 function generateCareerResults(){const skills=getStudentSkills();const results=careers.map(function(c){return {career:c,score:calculateCareerScore(skills,c),missing:findSkillGap(skills,c)};});results.sort(function(a,b){return b.score-a.score;});return results;}
 function renderPersonalizedRoadmap(career,missing){
  const box=document.querySelector("#roadmap .roadmap"),title=document.querySelector("#roadmap .page-header p");if(!box)return;
- if(title)title.innerHTML="Personalized pathway toward <b>"+career.name+"</b>, based on your selected skills, subjects and interests.";
- const route=career.roadmap&&career.roadmap.length?career.roadmap:["Explore foundational subjects","Learn core skills for "+career.name,"Complete a guided beginner project","Build practical experience","Check official education and qualification requirements","Create a portfolio and plan next steps"];
+ if(title)title.innerHTML="Personalized pathway toward <b>"+escapeJobHtml(career.name)+"</b>, based on your selected skills, subjects and interests.";
+ const base=career.roadmap&&career.roadmap.length?career.roadmap:["Explore foundational subjects","Learn core skills for "+career.name,"Complete a guided beginner project","Build practical experience","Check official education and qualification requirements","Create a portfolio and plan next steps"];
+ const gapSteps=missing.slice(0,4).map(function(skill){return "Learn and practice "+skill+" through guided exercises and a small project."});
+ const route=base.slice(0,2).concat(gapSteps,base.slice(2)).filter(function(item,index,all){return all.indexOf(item)===index;}).slice(0,9);
  const colors=["green","blue","orange","purple","pink","green"];
- box.innerHTML=route.map(function(item,i){return '<div class="step"><div class="step-icon '+colors[i%colors.length]+'">'+(i+1)+'</div><h4>Step '+(i+1)+'</h4><strong>'+(["Foundation","Core Learning","Focused Practice","Applied Experience","Qualification & Portfolio","Next Milestone"][i]||"Next Step")+'</strong><ul><li>'+item+'</li></ul></div>';}).join("");
- const goal=document.querySelector("#roadmap .goal p");if(goal)goal.textContent=missing.length?"Next skill gaps for this pathway: "+missing.slice(0,5).join(", ")+". Requirements vary by course, institution and location; verify official eligibility before applying.":"Your profile matches many tracked requirements. Build evidence through projects, practical experience and relevant qualifications.";
+ box.innerHTML=route.map(function(item,i){return '<div class="step"><div class="step-icon '+colors[i%colors.length]+'">'+(i+1)+'</div><h4>Step '+(i+1)+'</h4><strong>'+(["Foundation","Core Learning","Priority Skill Gap","Guided Practice","Applied Experience","Qualification & Portfolio","Project","Validation","Next Milestone"][i]||"Next Step")+'</strong><ul><li>'+escapeJobHtml(item)+'</li></ul></div>';}).join("");
+ const goal=document.querySelector("#roadmap .goal p");if(goal)goal.textContent=missing.length?"Prioritized gaps to work on: "+missing.slice(0,5).join(", ")+". Requirements vary by course, institution and location; verify official eligibility before applying.":"Your profile matches many tracked requirements. Build evidence through projects, practical experience and relevant qualifications.";
+}
+function downloadCareerReport(kind){
+ const name=String((document.getElementById("name")||{}).value||"Student").trim();
+ const skills=getStudentSkills();
+ const interests=(document.getElementById("interests")||{}).value||"";
+ const subjects=(document.getElementById("subjects")||{}).value||"";
+ const targetResults=generateCareerResults(),chosen=targetResults.slice(0,8);
+ const lines=["STUDENT SKILL-TO-CAREER MATCHER","Generated: "+new Date().toLocaleString(),"Student: "+name,"","Skills: "+(skills.join(", ")||"Not provided"),"Subjects: "+(subjects||"Not provided"),"Interests: "+(interests||"Not provided"),""];
+ if(kind==="roadmap"){
+  const best=chosen[0];lines.push("PERSONALIZED ROADMAP");
+  if(best){lines.push("Target career: "+best.career.name,"Compatibility: "+best.score+"%","","Learning steps:");
+   (best.career.roadmap||["Strengthen foundational subjects","Learn core role skills","Build a practical project","Verify course and qualification requirements"]).forEach(function(step,i){lines.push((i+1)+". "+step);});
+   const gaps=findSkillGap(skills,best.career);lines.push("","Priority skill gaps: "+(gaps.join(", ")||"No tracked gaps detected"));
+  }
+ }else{
+  lines.push("TOP CAREER MATCHES");
+  chosen.forEach(function(item,i){lines.push((i+1)+". "+item.career.name+" — "+item.score+"%","   Skill gaps: "+(item.missing.join(", ")||"No tracked gaps detected"));});
+  if(chosen[0]){lines.push("","RECOMMENDED LEARNING ROADMAP");(chosen[0].career.roadmap||[]).forEach(function(step,i){lines.push((i+1)+". "+step);});}
+ }
+ lines.push("","Note: Scores are rule-based guidance, not aptitude tests or hiring predictions. Check official course eligibility and licensing requirements.");
+ const blob=new Blob([lines.join("\n")],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),link=document.createElement("a");
+ link.href=url;link.download=(kind==="roadmap"?"career-roadmap":"career-match-report")+".txt";
+ document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);
 }
 const priorOnload=window.onload;
 window.onload=function(){
