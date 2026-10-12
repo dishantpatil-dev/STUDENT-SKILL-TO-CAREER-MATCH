@@ -720,6 +720,11 @@ function analyzeProfile() {
         "profileName"
     ).innerText = name;
 
+    const profileSkills = document.getElementById("profileSkills");
+    const profileInterests = document.getElementById("profileInterests");
+    if (profileSkills) profileSkills.textContent = skills.join(", ");
+    if (profileInterests) profileInterests.textContent = document.getElementById("interests").value.trim() || "Not specified";
+
 
     // ======================================
     // SHOW RECOMMENDATIONS
@@ -784,6 +789,11 @@ window.onload = function() {
         document.getElementById(
             "profileName"
         ).innerText = savedName;
+
+        const profileSkills = document.getElementById("profileSkills");
+        const profileInterests = document.getElementById("profileInterests");
+        if (profileSkills) profileSkills.textContent = savedSkills || "Add your skills in Assessment.";
+        if (profileInterests) profileInterests.textContent = savedInterests || "Add your interests in Assessment.";
 
     }
 
