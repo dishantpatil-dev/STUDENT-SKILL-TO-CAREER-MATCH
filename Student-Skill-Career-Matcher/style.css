@@ -1088,3 +1088,37 @@ textarea:focus {
 .skill-catalog{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-height:340px;overflow:auto;padding:2px 3px 8px}.skill-chip{display:flex;align-items:center;gap:8px;min-width:0;border:1px solid #e0e7f0;border-radius:8px;padding:9px 10px;background:#fff;color:#2b3952;font-size:11px;cursor:pointer}.skill-chip:hover{border-color:#8196ef}.skill-chip.selected{background:#eef2ff;border-color:#7b8be8;color:#263d9b}.skill-chip input{width:14px;height:14px;flex:0 0 14px;margin:0;accent-color:#5267e8}.skill-chip span{overflow-wrap:anywhere}.skill-group-title{grid-column:1/-1;color:#778399;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.09em;padding:9px 0 2px}.skill-group-grid{grid-column:1/-1;display:contents}.skill-picker-note{font-size:11px;color:#778399;margin:12px 0 0}.field-hint{font-size:10px;color:#758198;line-height:1.5}.form-grid .form-group:has(#skills){grid-column:1/-1}.assessment-card{width:100%}
 .pathway-note{margin:10px 0;padding:12px 14px;border:1px solid #dbe6f5;border-radius:9px;background:#f4f8ff;color:#465774;font-size:11px;line-height:1.6}.pathway-note strong{color:#1c3157}.pathway-tags{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}.pathway-tag{display:inline-flex;border-radius:20px;padding:6px 10px;background:#eef2ff;color:#384ba2;font-size:10px;font-weight:700}
 @media(max-width:900px){.skill-catalog{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:600px){.skill-picker{padding:10px}.skill-picker-toolbar{align-items:stretch;flex-direction:column}.skill-catalog{grid-template-columns:repeat(2,minmax(0,1fr));max-height:280px}.form-grid{grid-template-columns:1fr}}
+
+/* Roadmap-aligned learning resources */
+.resource-controls{margin:16px 0;padding:18px;border:1px solid #e0e7f0;border-radius:12px;background:#fff}
+.resource-controls label{display:block;margin-bottom:8px;color:#24344f}
+.resource-controls select{width:100%;max-width:560px;padding:11px 12px;border:1px solid #d5deea;border-radius:8px;background:#fff;color:#20314b;font:inherit}
+.resource-summary{margin:16px 0}
+.resource-summary-main{padding:20px;border-radius:14px;background:linear-gradient(130deg,#172e52,#314f87);color:#fff}
+.resource-eyebrow{font-size:10px;letter-spacing:.14em;font-weight:800;opacity:.8}
+.resource-summary-main h3{font-size:23px;margin:8px 0}
+.resource-summary-main p{max-width:760px;color:#e1e9f6;line-height:1.6;margin:6px 0 12px}
+.resource-summary-main small{color:#e1e9f6}
+.resource-tags{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.resource-tags span{padding:5px 9px;border:1px solid #7188ad;border-radius:18px;background:#ffffff16;font-size:11px}
+.resource-section-heading{margin:26px 0 12px}
+.resource-section-heading h2{font-size:18px;margin:0 0 5px;color:#1d2d47}
+.resource-section-heading p{font-size:12px;line-height:1.5;color:#748096;margin:0}
+.resource-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.resource-card{display:flex;flex-direction:column;align-items:flex-start;min-width:0;padding:17px;border:1px solid #e0e7f0;border-radius:12px;background:#fff;box-shadow:0 3px 12px #20314b08}
+.resource-card-top{display:flex;width:100%;align-items:center;justify-content:space-between;gap:8px}
+.resource-play{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:#fff0f0;color:#d62f39;font-size:14px}
+.resource-fit{font-size:10px;color:#4e6384;background:#edf3fb;border-radius:20px;padding:5px 8px}
+.resource-card h3{font-size:15px;margin:13px 0 5px;color:#1c2e4a}
+.resource-card p{font-size:12px;line-height:1.55;color:#69778d;margin:5px 0 10px}
+.resource-card .resource-focus{font-weight:700;color:#405575}
+.resource-card a,.roadmap-resource a{display:inline-flex;gap:6px;align-items:center;margin-top:auto;color:#3158bd;font-size:12px;font-weight:700;text-decoration:none}
+.resource-card a:hover,.roadmap-resource a:hover{text-decoration:underline}
+.roadmap-resource-list{display:grid;gap:10px}
+.roadmap-resource{display:flex;gap:13px;align-items:flex-start;padding:15px;border:1px solid #e1e8f1;border-radius:11px;background:#fff}
+.resource-step-number{flex:0 0 32px;height:32px;display:grid;place-items:center;border-radius:10px;background:#eaf0ff;color:#324ba8;font-weight:800}
+.roadmap-resource-copy{min-width:0}
+.roadmap-resource-copy strong{display:block;color:#253651;font-size:13px;line-height:1.5}
+.roadmap-resource-copy p{font-size:11px;color:#7a879a;margin:5px 0 8px}
+@media(max-width:1000px){.resource-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.resource-grid{grid-template-columns:1fr}.resource-summary-main{padding:15px}.resource-summary-main h3{font-size:19px}.roadmap-resource{padding:12px}}

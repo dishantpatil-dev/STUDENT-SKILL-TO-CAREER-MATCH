@@ -49,6 +49,10 @@
                 🗺 Roadmap
             </button>
 
+            <button class="nav-btn" onclick="showPage('resources')">
+                ▶ Resources
+            </button>
+
             <button class="nav-btn" onclick="showPage('jobmatch')">
                 ✦ Job Match
             </button>
@@ -779,6 +783,34 @@
 
         <!-- ================================================= -->
         <!-- JOB DESCRIPTION MATCH -->
+        <section id="resources" class="page">
+            <div class="page-header">
+                <div>
+                    <h1>Learning Resources</h1>
+                    <p>YouTube channels and topic searches matched to your chosen career roadmap.</p>
+                </div>
+                <button class="secondary-btn" type="button" onclick="useTopCareerResources()">Use my top match</button>
+            </div>
+
+            <div class="resource-controls visual-panel">
+                <label for="resourceCareer"><strong>Choose a career pathway</strong></label>
+                <select id="resourceCareer" onchange="renderResourcePage(this.value)"></select>
+                <p class="field-hint">Resources are suggestions for self-study. Check the channel's playlist and choose the level that suits you.</p>
+            </div>
+            <div id="resourceSummary" class="resource-summary" aria-live="polite"></div>
+            <div class="resource-section-heading">
+                <h2>Recommended YouTube channels</h2>
+                <p>Channels are selected using the career's skills, subjects and roadmap.</p>
+            </div>
+            <div id="resourceChannelGrid" class="resource-grid" aria-live="polite"></div>
+            <div class="resource-section-heading">
+                <h2>Learn each roadmap topic</h2>
+                <p>Each step opens a YouTube search for that specific topic, so resources stay aligned with your selected path.</p>
+            </div>
+            <div id="roadmapResourceList" class="roadmap-resource-list"></div>
+            <div class="info">These are independent educational resources, not endorsements. Course admission, professional licensing and eligibility depend on official requirements.</div>
+        </section>
+
         <section id="jobmatch" class="page">
             <div class="page-header">
                 <div>
