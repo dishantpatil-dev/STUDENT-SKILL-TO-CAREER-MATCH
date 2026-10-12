@@ -891,7 +891,7 @@ function analyzeJobDescription() {
  const missingHtml=missing.length?missing.map(function(skill){return '<span class="keyword missing">+ '+escapeJobHtml(skill)+'</span>';}).join(""):'<span class="keyword matched">No tracked gaps detected</span>';
  out.innerHTML='<div class="job-result"><h3>Job Match Analysis</h3><p>This keyword-based comparison uses the skills tracked by this project. It is not an ATS prediction or hiring decision.</p><div class="match-stat-grid"><div class="match-stat"><strong>'+score+'%</strong><small>Tracked skill coverage</small></div><div class="match-stat"><strong>'+matched.length+'</strong><small>Skills you match</small></div><div class="match-stat"><strong>'+missing.length+'</strong><small>Skills to work on</small></div></div><p><strong>Closest tracked career profile:</strong> '+escapeJobHtml(role)+'</p><h4>Matched skills</h4><div class="keyword-list">'+matchedHtml+'</div><h4>Skill gaps</h4><div class="keyword-list">'+missingHtml+'</div></div>';
 }
-updateRoadmap=function(career){renderPersonalizedRoadmap(career,findSkillGap(getStudentSkills(),career));};
+updateRoadmap=function(career){renderPersonalizedRoadmap(career,findSkillGap(getStudentSkills(),career));renderResourcePage(career.name);};
 
     
 // ==========================================
@@ -1104,6 +1104,97 @@ function downloadCareerReport(kind){
  link.href=url;link.download=(kind==="roadmap"?"career-roadmap":"career-match-report")+".txt";
  document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);
 }
+
+/* =========================================================
+   ROADMAP-BASED YOUTUBE RESOURCES
+   ========================================================= */
+const learningChannels = [
+ {name:"freeCodeCamp.org",handle:"@freecodecamp",url:"https://www.youtube.com/@freecodecamp",focus:"Programming, web development, data and AI",tags:["software","programming","web","data","ai","cloud","cybersecurity","mobile","game","robotics"],why:"Long-form tutorials and practical projects for building technical foundations."},
+ {name:"CS50",handle:"@cs50",url:"https://www.youtube.com/@cs50",focus:"Computer science and programming fundamentals",tags:["software","programming","computer","ai","game","robotics","cybersecurity"],why:"Structured introductions to computational thinking and core computer science."},
+ {name:"Apna College",handle:"@ApnaCollegeOfficial",url:"https://www.youtube.com/@ApnaCollegeOfficial",focus:"Programming, DSA and interview preparation",tags:["software","programming","web","mobile","cybersecurity"],why:"Beginner-friendly coding lessons and interview-oriented practice."},
+ {name:"Neso Academy",handle:"@nesoacademy",url:"https://www.youtube.com/@nesoacademy",focus:"Engineering, electronics, mathematics and computer science",tags:["software","engineering","electronics","robotics","math","physics","civil","mechanical","electrical","biomedical"],why:"Concept-focused lessons for technical subjects and engineering foundations."},
+ {name:"Khan Academy",handle:"@khanacademy",url:"https://www.youtube.com/@khanacademy",focus:"Algebra, geometry, calculus, biology, chemistry and physics",tags:["math","science","biology","medicine","pharmacy","biotech","biochemistry","chemistry","physics","engineering","actuary","economics","environment","agriculture","geology","forensic","nutrition","psychology"],why:"Clear foundational explanations for school and early university topics."},
+ {name:"The Organic Chemistry Tutor",handle:"@TheOrganicChemistryTutor",url:"https://www.youtube.com/@TheOrganicChemistryTutor",focus:"Maths, chemistry, physics and worked examples",tags:["math","science","chemistry","biology","medicine","pharmacy","biotech","biochemistry","physics","engineering","forensic","nutrition"],why:"Step-by-step problem walkthroughs useful for strengthening prerequisites."},
+ {name:"3Blue1Brown",handle:"@3blue1brown",url:"https://www.youtube.com/@3blue1brown",focus:"Visual mathematics, calculus, linear algebra and neural networks",tags:["math","ai","data","actuary","economics","physics","statistics","software"],why:"Visual intuition for abstract mathematical ideas."},
+ {name:"StatQuest with Josh Starmer",handle:"@statquest",url:"https://www.youtube.com/@statquest",focus:"Statistics, machine learning and data science",tags:["data","ai","math","statistics","actuary","economics","psychology","environment","agriculture"],why:"Friendly visual explanations of statistical and machine-learning concepts."},
+ {name:"CrashCourse",handle:"@crashcourse",url:"https://www.youtube.com/@crashcourse",focus:"Biology, chemistry, physics, economics and psychology",tags:["science","biology","medicine","pharmacy","biotech","biochemistry","chemistry","physics","economics","psychology","environment","agriculture","geology","forensic","nutrition"],why:"Short, structured introductions to a wide range of academic subjects."},
+ {name:"Ninja Nerd",handle:"@NinjaNerdOfficial",url:"https://www.youtube.com/@NinjaNerdOfficial",focus:"Human physiology, anatomy and medical sciences",tags:["medicine","doctor","pharmacy","biomedical","nutrition","psychology","biology"],why:"Detailed medical-science lectures to supplement formal study."},
+ {name:"MIT OpenCourseWare",handle:"@mitocw",url:"https://www.youtube.com/@mitocw",focus:"University-level science, engineering, maths and computing",tags:["engineering","math","physics","software","ai","robotics","electronics","civil","mechanical","electrical","biomedical","chemistry","data"],why:"University course lectures for learners ready to go deeper."},
+ {name:"Proko",handle:"@ProkoTV",url:"https://www.youtube.com/@ProkoTV",focus:"Drawing, figure drawing and visual fundamentals",tags:["drawing","design","architecture","animation","game","cad","illustration"],why:"Guided drawing practice for visual communication and portfolio work."},
+ {name:"SketchUp",handle:"@SketchUp",url:"https://www.youtube.com/@SketchUp",focus:"3D modelling and architectural design workflows",tags:["architecture","cad","civil","design","drawing","engineering"],why:"Useful introductions to 3D modelling and spatial design workflows."},
+ {name:"Figma",handle:"@Figma",url:"https://www.youtube.com/@Figma",focus:"UI/UX design and digital product design",tags:["design","web","software","business","drawing"],why:"Product design, interface workflows and collaborative design concepts."},
+ {name:"Harvard Business Review",handle:"@HarvardBusinessReview",url:"https://www.youtube.com/@HarvardBusinessReview",focus:"Business thinking, management and communication",tags:["business","economics","actuary","writer","teacher","communication","psychology","analyst"],why:"Perspectives on decision-making, organizations and professional skills."},
+ {name:"Toastmasters International",handle:"@ToastmastersInternational",url:"https://www.youtube.com/@ToastmastersInternational",focus:"Public speaking, presentation and communication",tags:["communication","teacher","business","writer","psychology","medicine","management"],why:"Practice ideas for explaining your work clearly and confidently."}
+];
+
+function getAllCareerProfiles() {
+ const all=(typeof careers!=="undefined"?careers:[]).slice();
+ if(typeof extendedCareers!=="undefined")extendedCareers.forEach(function(c){if(!all.some(function(x){return x.name===c.name;}))all.push(c);});
+ return all.sort(function(a,b){return a.name.localeCompare(b.name);});
+}
+function resourceCareerTags(career) {
+ const text=[career.name,career.description].concat(career.skills||[],career.subjects||[],career.interests||[],career.requiredSkills||[],career.roadmap||[]).join(" ").toLowerCase();
+ const tags=[];
+ const rules=[
+  ["software|developer|programming|computer|backend|web|mobile|cybersecurity|cloud|devops|data scientist|ai engineer","software","programming","computer"],
+  ["data analyst|data scientist|statistics|analytics|economist|actuary","data","statistics","math"],
+  ["artificial intelligence|machine learning|ai engineer|neural network","ai"],
+  ["doctor|physician|medicine|pharmacist|pharmacy|nutrition|biomedical|biochem|biotechn|forensic|psychology","science","biology","medicine","pharmacy"],
+  ["biology|biolog|microbiology|genetics|agriculture|environment|geolog","biology","science"],
+  ["chemistry|chemist|pharmac|biochem","chemistry","science"],
+  ["physics|physicist|electrical|mechanical|civil|engineering|robotics|electronics","physics","engineering"],
+  ["mathemat|algebra|geometry|calculus|statistic|actuary|economist","math"],
+  ["drawing|architect|design|animator|illustrat|cad|3d artist|visual","drawing","design","architecture"],
+  ["business|entrepreneur|analyst|economist|writer|teacher|communication|psychology","business","communication"]
+ ];
+ rules.forEach(function(rule){if(new RegExp(rule[0],"i").test(text))tags.push.apply(tags,rule.slice(1));});
+ return Array.from(new Set(tags));
+}
+function getCareerRoadmapSteps(career) {
+ const steps=(career.roadmap||[]).slice();
+ if(!steps.length) {
+  (career.requiredSkills||career.skills||[]).slice(0,6).forEach(function(skill){steps.push("Learn and practice "+skill);});
+ }
+ if(!steps.length)steps.push("Build foundations for "+career.name,"Practice core skills","Complete a small project","Review official education and qualification requirements");
+ return steps.slice(0,10);
+}
+function renderResourcePage(careerName) {
+ const selector=document.getElementById("resourceCareer");
+ const profiles=getAllCareerProfiles();
+ if(!profiles.length)return;
+ if(selector) {
+  const current=careerName||selector.value||profiles[0].name;
+  selector.innerHTML=profiles.map(function(career){return '<option value="'+escapeJobHtml(career.name)+'">'+escapeJobHtml(career.name)+'</option>';}).join("");
+  selector.value=profiles.some(function(c){return c.name===current;})?current:profiles[0].name;
+ }
+ const selectedName=selector?selector.value:(careerName||profiles[0].name);
+ const career=profiles.find(function(item){return item.name===selectedName;})||profiles[0];
+ const tags=resourceCareerTags(career);
+ const roadmap=getCareerRoadmapSteps(career);
+ const summary=document.getElementById("resourceSummary");
+ if(summary)summary.innerHTML='<div class="resource-summary-main"><span class="resource-eyebrow">YOUR LEARNING PATH</span><h3>'+escapeJobHtml(career.icon||"🎯")+' '+escapeJobHtml(career.name)+'</h3><p>'+escapeJobHtml(career.description||"A focused collection of learning resources for this pathway.")+'</p><div class="resource-tags">'+tags.slice(0,6).map(function(tag){return '<span>'+escapeJobHtml(tag)+'</span>';}).join("")+'</div><small>'+roadmap.length+' roadmap stages · '+tags.length+' topic areas detected</small></div>';
+ const matched=learningChannels.map(function(channel){
+  const score=channel.tags.reduce(function(total,tag){return total+(tags.indexOf(tag)>=0?1:0);},0);
+  return {channel:channel,score:score};
+ }).filter(function(item){return item.score>0;}).sort(function(a,b){return b.score-a.score;}).slice(0,8);
+ const grid=document.getElementById("resourceChannelGrid");
+ if(grid)grid.innerHTML=matched.map(function(item){
+  const ch=item.channel;
+  return '<article class="resource-card"><div class="resource-card-top"><span class="resource-play">▶</span><span class="resource-fit">'+item.score+' topic match'+(item.score===1?'':'es')+'</span></div><h3>'+escapeJobHtml(ch.name)+'</h3><p class="resource-focus">'+escapeJobHtml(ch.focus)+'</p><p>'+escapeJobHtml(ch.why)+'</p><a href="'+ch.url+'" target="_blank" rel="noopener noreferrer">Open YouTube channel <span aria-hidden="true">↗</span></a></article>';
+ }).join("")||'<p class="info">No channel matches were found. Use the topic searches below to discover current playlists.</p>';
+ const list=document.getElementById("roadmapResourceList");
+ if(list)list.innerHTML=roadmap.map(function(step,index){
+  const query=encodeURIComponent(step+" "+career.name+" tutorial course");
+  return '<article class="roadmap-resource"><div class="resource-step-number">'+(index+1)+'</div><div class="roadmap-resource-copy"><strong>'+escapeJobHtml(step)+'</strong><p>Study this stage, then practice it before moving to the next step.</p><a href="https://www.youtube.com/results?search_query='+query+'" target="_blank" rel="noopener noreferrer">Find YouTube lessons for this step ↗</a></div></article>';
+ }).join("");
+}
+function useTopCareerResources() {
+ const results=generateCareerResults();
+ if(results.length&&results[0].career)renderResourcePage(results[0].career.name);
+ else renderResourcePage();
+ showPage("resources");
+}
+
 const priorOnload=window.onload;
 window.onload=function(){
  if(typeof priorOnload==="function")priorOnload();
@@ -1113,4 +1204,5 @@ window.onload=function(){
  const skillField=document.getElementById("skills");if(skillField)skillField.addEventListener("input",renderSkillCatalog);
  const searchField=document.getElementById("skillSearch");if(searchField)searchField.addEventListener("input",renderSkillCatalog);
  renderSkillCatalog();
+ renderResourcePage();
 };
