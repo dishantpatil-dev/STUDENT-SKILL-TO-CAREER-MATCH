@@ -1038,6 +1038,9 @@ function renderPersonalizedRoadmap(career,missing){
 const priorOnload=window.onload;
 window.onload=function(){
  if(typeof priorOnload==="function")priorOnload();
+ const savedSubjects=localStorage.getItem("studentSubjects"),savedPreferences=localStorage.getItem("studentPreferences");
+ if(savedSubjects)document.getElementById("subjects").value=savedSubjects;
+ if(savedPreferences)document.getElementById("preferences").value=savedPreferences;
  const skillField=document.getElementById("skills");if(skillField)skillField.addEventListener("input",renderSkillCatalog);
  const searchField=document.getElementById("skillSearch");if(searchField)searchField.addEventListener("input",renderSkillCatalog);
  renderSkillCatalog();
