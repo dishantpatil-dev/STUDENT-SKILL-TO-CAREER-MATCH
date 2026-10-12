@@ -705,6 +705,8 @@ function analyzeProfile() {
             "interests"
         ).value
     );
+    localStorage.setItem("studentSubjects", document.getElementById("subjects").value);
+    localStorage.setItem("studentPreferences", document.getElementById("preferences").value);
 
 
     // ======================================
