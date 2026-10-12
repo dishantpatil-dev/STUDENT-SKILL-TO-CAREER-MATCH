@@ -446,6 +446,8 @@ function displayCareerResults() {
     });
 
 
+    renderCareerVisuals(results);
+
     return results;
 
 }
@@ -454,6 +456,43 @@ function displayCareerResults() {
 // ==========================================
 // DISPLAY SKILL GAP
 // ==========================================
+
+
+/* Interactive career insight graphics */
+function renderCareerVisuals(results) {
+    const host = document.getElementById("careerVisuals");
+    if (!host || !results || !results.length) return;
+    const top = results[0];
+    const topScore = Math.max(0, Math.min(100, Number(top.score) || 0));
+    host.innerHTML = `
+        <section class="visual-panel" aria-label="Top career compatibility">
+            <p class="visual-kicker">Your strongest match</p><h3>${top.career.name}</h3>
+            <div class="score-ring-wrap"><div class="score-ring" style="--score:${topScore}" role="img" aria-label="Compatibility score ${topScore} percent">
+                <div class="score-ring-content"><strong>${topScore}%</strong><span>COMPATIBILITY</span></div>
+            </div></div>
+            <p class="visual-caption">Based on the skills tracked by this project. Treat this as guidance, not a prediction of career success.</p>
+        </section>
+        <section class="visual-panel" aria-label="Career match comparison">
+            <p class="visual-kicker">Explore your options</p><h3>Career match comparison</h3>
+            <div class="comparison-list">${results.slice(0,4).map(function(result,index) {
+                const score = Math.max(0,Math.min(100,Number(result.score)||0));
+                const name = result.career.name;
+                return '<button type="button" class="comparison-item" data-career="'+name.replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'" onclick="selectCareerFromChart(this.dataset.career)" aria-label="View skill gaps for '+name+'"><span class="comparison-top"><span class="comparison-name">'+(index+1)+'. '+name+'</span><span class="comparison-score">'+score+'%</span></span><span class="comparison-track"><span class="comparison-fill" data-width="'+score+'%"></span></span></button>';
+            }).join("")}</div>
+            <p class="visual-hint">Select a career bar to open its skill-gap analysis.</p>
+        </section>`;
+    window.requestAnimationFrame(function() {
+        host.querySelectorAll(".comparison-fill").forEach(function(bar) { bar.style.width = bar.getAttribute("data-width") || "0%"; });
+    });
+}
+function selectCareerFromChart(careerName) {
+    const result = generateCareerResults().find(function(item) { return item.career.name === careerName; });
+    if (!result) return;
+    displaySkillGap(result);
+    updateRoadmap(result.career);
+    showPage("skillgap");
+}
+
 
 function displaySkillGap(result) {
 
