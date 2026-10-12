@@ -356,7 +356,7 @@ function displayCareerResults() {
         );
 
 
-    results.slice(0, 3).forEach(function(result, index) {
+    results.slice(0, 8).forEach(function(result, index) {
 
         const career =
             result.career;
