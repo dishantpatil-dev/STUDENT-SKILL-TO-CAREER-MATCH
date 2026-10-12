@@ -169,8 +169,19 @@
                             type="text"
                             id="skills"
                             value="C++, DSA, Problem Solving, Python"
+                            placeholder="Search or type skills, e.g. Biology, Algebra, Drawing"
+                            autocomplete="off"
                         >
-
+                        <small class="field-hint">Select from the catalog or type your own. Mix technical, academic, creative and practical skills.</small>
+                        <div class="skill-picker">
+                            <div class="skill-picker-toolbar">
+                                <input type="search" id="skillSearch" placeholder="Search 150+ skills and subjects…" aria-label="Search skills and subjects">
+                                <button type="button" class="secondary-btn" onclick="clearCatalogSelection()">Clear selected</button>
+                            </div>
+                            <div id="skillCategories" class="skill-categories"></div>
+                            <div id="skillCatalog" class="skill-catalog"></div>
+                            <p class="skill-picker-note"><span id="skillCount">4</span> selected. Select as many as apply; subjects and interests also influence recommendations.</p>
+                        </div>
                     </div>
 
 
