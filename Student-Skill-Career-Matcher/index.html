@@ -49,6 +49,10 @@
                 🗺 Roadmap
             </button>
 
+            <button class="nav-btn" onclick="showPage('jobmatch')">
+                ✦ Job Match
+            </button>
+
             <button class="nav-btn" onclick="showPage('profile')">
                 ♙ Profile
             </button>
@@ -763,6 +767,33 @@
 
 
         <!-- ================================================= -->
+        <!-- JOB DESCRIPTION MATCH -->
+        <section id="jobmatch" class="page">
+            <div class="page-header">
+                <div>
+                    <h1>Job Description Match</h1>
+                    <p>Compare your current skills with requirements in an internship or job description.</p>
+                </div>
+            </div>
+            <div class="job-hero visual-panel">
+                <div class="job-step-row">
+                    <span class="job-step active">1. Paste description</span><span class="job-arrow">→</span>
+                    <span class="job-step active">2. Detect skills</span><span class="job-arrow">→</span>
+                    <span class="job-step active">3. Review gaps</span>
+                </div>
+                <label for="jobDescription"><strong>Job or internship description</strong></label>
+                <p class="field-hint">Paste role requirements. The matcher checks skills supported by this project.</p>
+                <textarea id="jobDescription" rows="9" placeholder="Example: Looking for a software engineering intern with C++, DSA, OOP, Git, SQL, REST APIs and testing..."></textarea>
+                <div class="job-actions">
+                    <button class="download-btn" type="button" onclick="analyzeJobDescription()">Analyze description</button>
+                    <button class="secondary-btn" type="button" onclick="loadDemoJob()">Try demo</button>
+                    <button class="secondary-btn" type="button" onclick="clearJobMatch()">Clear</button>
+                </div>
+                <div id="jobMatchResults" class="job-results" aria-live="polite"></div>
+            </div>
+            <div class="info">This reports tracked skill coverage, not an ATS score, hiring probability, or guarantee of selection.</div>
+        </section>
+
         <!-- PROFILE -->
         <!-- ================================================= -->
 
@@ -800,6 +831,10 @@
                     <p>
                         Undergraduate • Fresher
                     </p>
+                    <div class="profile-details">
+                        <p><strong>Current skills</strong><span id="profileSkills">Add your skills in Assessment.</span></p>
+                        <p><strong>Career interests</strong><span id="profileInterests">Add your interests in Assessment.</span></p>
+                    </div>
 
                 </div>
 
