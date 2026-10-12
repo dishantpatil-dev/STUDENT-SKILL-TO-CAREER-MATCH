@@ -992,6 +992,30 @@ const extendedCareers=[
 {name:"Business Analyst / Entrepreneur",icon:"💡",description:"Identifies problems, evaluates opportunities and improves business decisions.",skills:["mathematics","communication","economics","excel","problem solving","data analysis"],requiredSkills:["Problem Solving","Communication","Business Fundamentals","Data Literacy","Planning"],subjects:["mathematics","economics","english"],interests:["business","entrepreneurship","leadership"],roadmap:["Explore customer problems and business basics","Build communication and research skills","Learn spreadsheets and data interpretation","Test a small idea with users","Learn budgeting and project planning","Document outcomes and iterate"]}
 ];
 extendedCareers.forEach(function(c){if(!careers.some(function(old){return old.name===c.name;}))careers.push(c);});
+function profileHas(skill,studentSkills){
+ const target=normalizeSkill(skill);
+ const aliases={
+  "dsa":["data structures algorithms","data structures and algorithms"],
+  "object oriented programming oop":["oop","object oriented programming"],
+  "git github":["git","github"],
+  "html css":["html","css"],
+  "pandas numpy":["pandas","numpy"],
+  "mathematics":["math","maths","mathematics","algebra","geometry","calculus","trigonometry"],
+  "biology":["biology","botany","zoology","anatomy","physiology","genetics","microbiology","biochemistry"],
+  "chemistry":["chemistry","biochemistry","organic chemistry","analytical chemistry"],
+  "drawing":["drawing","sketching","technical drawing","engineering drawing"],
+  "statistics":["statistics","probability"],
+  "physics":["physics"]
+ };
+ const keys=[target].concat(aliases[target]||[]);
+ return studentSkills.some(function(value){
+  const current=normalizeSkill(value);
+  return keys.some(function(key){
+   const k=normalizeSkill(key);
+   return current===k || (k.length>=5 && current.includes(k)) || (current.length>=5 && k.includes(current));
+  });
+ });
+}
 function calculateCareerScore(studentSkills,career){
  const req=career.skills||[];if(!req.length)return 0;
  let hit=0;req.forEach(function(s){if(profileHas(s,studentSkills))hit++;});
