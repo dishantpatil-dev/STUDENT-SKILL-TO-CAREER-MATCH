@@ -1073,3 +1073,9 @@ textarea:focus {
 @media(max-width:850px){.career-visuals{grid-template-columns:1fr}.visual-panel{padding:17px}}
 @media(prefers-reduced-motion:reduce){.score-ring,.comparison-fill{transition:none}}
 @media print{.career-visuals{break-inside:avoid}.visual-panel{box-shadow:none}}
+
+.profile-details{display:grid;gap:9px;margin-top:12px}.profile-details p{display:grid;gap:4px;margin:0;color:#5e6b80;font-size:11px;line-height:1.5}.profile-details strong{color:#263550;font-size:10px;text-transform:uppercase;letter-spacing:.05em}
+.job-hero label{display:block;margin:18px 0 6px;color:#25334d;font-size:12px}.job-hero .field-hint{margin:0 0 10px}
+.job-actions .download-btn{border:0;border-radius:7px;padding:10px 16px;cursor:pointer;font-weight:700}
+.job-actions .download-btn:hover{filter:brightness(.97);transform:translateY(-1px)}.job-results:empty{display:none}
+@media(max-width:600px){.job-step-row{justify-content:flex-start}.job-actions{justify-content:flex-start}.job-actions button{width:100%}}
