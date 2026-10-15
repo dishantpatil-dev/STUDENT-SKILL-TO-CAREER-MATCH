@@ -1122,3 +1122,186 @@ textarea:focus {
 .roadmap-resource-copy p{font-size:11px;color:#7a879a;margin:5px 0 8px}
 @media(max-width:1000px){.resource-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.resource-grid{grid-template-columns:1fr}.resource-summary-main{padding:15px}.resource-summary-main h3{font-size:19px}.roadmap-resource{padding:12px}}
+
+
+/* ================= ANDROID / MOBILE NAVIGATION FIX =================
+   Replace the cramped icon-only rail with a stable, horizontally scrollable
+   bottom navigation on touch-sized screens. Keep all destinations accessible.
+*/
+@media (max-width: 800px) {
+    html, body {
+        min-width: 0;
+        width: 100%;
+        overflow-x: clip;
+    }
+
+    .app {
+        display: block;
+        min-height: 100vh;
+        min-height: 100dvh;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: auto;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        width: 100%;
+        height: auto;
+        padding: 8px max(8px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom));
+        border-top: 1px solid rgba(255,255,255,.14);
+        box-shadow: 0 -8px 24px rgba(7, 26, 52, .18);
+    }
+
+    .sidebar .logo {
+        display: none;
+    }
+
+    .sidebar nav {
+        display: flex;
+        align-items: stretch;
+        gap: 6px;
+        width: 100%;
+        margin: 0;
+        padding: 0 2px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-x: contain;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .sidebar nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .sidebar .nav-btn,
+    .sidebar .nav-btn.logout {
+        display: flex;
+        flex: 0 0 auto;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        min-width: max-content;
+        min-height: 44px;
+        margin: 0;
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-size: 12px;
+        line-height: 1.2;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    .main {
+        width: 100%;
+        min-width: 0;
+        margin: 0;
+        padding: 0 16px calc(28px + 76px + env(safe-area-inset-bottom));
+    }
+
+    .topbar {
+        min-width: 0;
+        height: 58px;
+    }
+
+    .user {
+        min-width: 0;
+        gap: 6px;
+    }
+
+    #topName {
+        overflow: hidden;
+        max-width: 38vw;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .page,
+    .card,
+    .assessment-card,
+    .job-hero,
+    .visual-panel {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .page-header {
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .page-header h1 {
+        font-size: clamp(20px, 5vw, 23px);
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+    }
+
+    .form-grid,
+    .gap-container {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .career-card {
+        grid-template-columns: 42px minmax(0, 1fr);
+        gap: 10px;
+    }
+
+    .career-info,
+    .score {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .score {
+        grid-column: 2;
+    }
+
+    .roadmap {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 22px;
+    }
+
+    .step:not(:last-child)::after {
+        display: none;
+    }
+
+    .skill-picker-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .skill-catalog {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .resource-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .match-stat-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 380px) {
+    .main {
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+
+    .sidebar .nav-btn,
+    .sidebar .nav-btn.logout {
+        padding: 10px 9px;
+        font-size: 11px;
+    }
+
+    .assessment-card,
+    .job-hero {
+        padding: 14px;
+    }
+}
